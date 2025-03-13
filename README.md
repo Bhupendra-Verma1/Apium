@@ -54,4 +54,4 @@ This project is licensed under the MIT License.
 We welcome contributions! Please open an issue or submit a pull request.
 
 ## 📧 Contact
-For queries, reach out to Bhupendra Verma at `your-email@example.com`.
+For queries, reach out to Bhupendra Verma at `bhupendrav945@gmail.com`.
