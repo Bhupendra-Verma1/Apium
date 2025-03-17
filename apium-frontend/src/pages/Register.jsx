@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import AuthService from '../services/AuthService';
 
 const Register = () => {
   const [formData, setFormData] = useState({ username: '', email: '', password: '' });
@@ -13,9 +13,9 @@ const Register = () => {
   const handleSubmit = async e => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:8080/auth/register', formData);
+      AuthService.register(formData)
       alert('Registration successful!');
-      navigate('/');
+      navigate('/login');
     } catch (error) {
       alert('Error registering user');
     }

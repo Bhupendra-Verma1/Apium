@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import axios from 'axios';
+import AuthService from '../services/AuthService'
 import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
@@ -13,11 +13,11 @@ const Login = () => {
   const handleSubmit = async e => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8080/auth/login', formData);
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('userEmail', formData.email);
+      const response = await AuthService.login(formData)
+      localStorage.setItem('token', response.data.token)
+      localStorage.setItem('userEmail', formData.email)
       alert('Login successful!');
-      navigate('/home');
+      navigate('/editor');
     } catch (error) {
       alert('Error logging in');
       console.log(error);
