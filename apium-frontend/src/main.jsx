@@ -4,7 +4,7 @@ import './index.css'
 import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from 'react-router-dom'
 
 import Layout from './Layout.Jsx'
-import { Home, Register, Login, About, Contact, CodeEditorPage } from './Index.js'
+import { Home, Register, Login, About, Contact, CodeEditorPage, ResetPassword } from './Index.js'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -15,6 +15,7 @@ const router = createBrowserRouter(
         <Route path = '/register' element = {<Register />} />
         <Route path = '/about' element = {<About />} />
         <Route path = '/contact' element = {<Contact />} />
+        <Route path = '/reset' element = {<ResetPassword />} />
       </Route>
       <Route path = '/editor' element = {<CodeEditorPage />} />
     </>

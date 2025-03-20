@@ -6,6 +6,7 @@ import Register from './pages/Register.jsx'
 import About from './pages/About.jsx'
 import Contact from './pages/Contact.jsx'
 import CodeEditorPage from './pages/CodeEditorPage.jsx'
+import ResetPassword from './pages/ResetPassword.jsx'
 
 export {
     Navbar, 
@@ -15,5 +16,6 @@ export {
     Register,
     About,
     Contact,
-    CodeEditorPage
+    CodeEditorPage,
+    ResetPassword
 }
