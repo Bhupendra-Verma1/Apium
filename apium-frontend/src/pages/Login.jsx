@@ -34,15 +34,15 @@ const Login = () => {
   };
 
   return (
-    <div className='flex h-[80vh] mt-5 items-center justify-center w-full flex-col'>
+    <div className='flex h-[80vh] mt-10 items-center justify-center w-full flex-col'>
       <div>
         <h2 className='text-3xl font-roboto'>Log in to your account</h2>
       </div>
       <div className='w-[80vh] h-[80vh] flex items-center flex-col mb-2'>
-        <form onSubmit={handleSubmit} className='w-99 h-59 mt-5 flex justify-center items-center flex-col'>
+        <form onSubmit={handleSubmit} className='w-99 h-70 mt-5 flex justify-center items-center flex-col'>
 
           {failed ? (
-            <div className='bg-red-300 border-1 text-sm text-red-800 border-red-400 h-6 w-full rounded-sm mb-7'>Invalid username or password.</div>
+            <div className='bg-red-300 border-1 text-sm text-red-800 border-red-400 h-6 w-full rounded-sm mb-4 px-2'>Invalid username or password.</div>
           ) :
             (<></>)
           }
@@ -92,7 +92,7 @@ const Login = () => {
           <button className={`w-full rounded-md h-9 text-white font-medium flex justify-center gap-3 items-center ${(formData.email !== "" && formData.password !== "") ? "bg-orange-500 hover:bg-orange-300" : "bg-red-300"} mt-3 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`} type="submit">
             Log in
             {loading ? (
-              <div className="w-3 h-3 border-2 border-t-transparent rounded-full animate-spin"></div>
+              <div className="w-3 h-3 border-2 mt-1 border-t-transparent rounded-full animate-spin"></div>
             ) :
               (<></>)
             }

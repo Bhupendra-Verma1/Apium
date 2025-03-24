@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/home")
-public class DemoController {
+public class HealthController {
 
     @GetMapping("/testing")
     public String sayHello(){

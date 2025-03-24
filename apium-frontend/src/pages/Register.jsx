@@ -45,7 +45,7 @@ const Register = () => {
     // </div>
     <div className='flex h-[80vh] mt-10 items-center justify-center w-full flex-col'>
       <div>
-        <h2 className='text-3xl font-roboto'>Create a Apium account</h2>
+        <h2 className='text-3xl font-roboto'>Create an Apium account</h2>
       </div>
       <div className='w-[80vh] h-[80vh] flex items-center flex-col mb-2'>
         <form onSubmit={handleSubmit} className='w-99 h-65 mt-5 flex justify-center items-center flex-col'>
@@ -111,7 +111,7 @@ const Register = () => {
           <button className={`w-full rounded-md h-9 text-white font-medium flex justify-center gap-3 items-center ${(formData.username !== "" && formData.email !== "" && formData.password !== "") ? "bg-orange-500 hover:bg-orange-300" : "bg-red-300"} mt-3 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`} type="submit">
             Create Account
             {loading ? (
-              <div className="w-3 h-3 border-2 border-t-transparent rounded-full animate-spin"></div>
+              <div className="w-3 h-3 border-2 border-t-transparent rounded-full animate-spin mt-1"></div>
             ) :
               (<></>)
             }
