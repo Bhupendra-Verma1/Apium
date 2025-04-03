@@ -36,12 +36,12 @@ public class CodeService {
     }
 
     // Retrieve a single code snippet by its ID
-    public Optional<Code> getCodeById(Long id) {
+    public Optional<Code> getCodeById(String id) {
         return codeRepository.findById(id);
     }
 
     // Update an existing code snippet
-    public Code updateCode(Long id, Code updatedCode, String email) {
+    public Code updateCode(String id, Code updatedCode, String email) {
         Code existingCode = codeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Code snippet not found"));
 
@@ -58,7 +58,7 @@ public class CodeService {
     }
 
     // Delete a code snippet
-    public void deleteCode(Long id, String email) {
+    public void deleteCode(String id, String email) {
         Code existingCode = codeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Code snippet not found"));
 

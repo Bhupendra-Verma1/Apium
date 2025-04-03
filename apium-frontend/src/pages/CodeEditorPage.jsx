@@ -1,37 +1,16 @@
-import { useState } from 'react';
-import { CodeEditor, Output, EditorHeader, Form, FileExplorer } from '../Index';
+import React from "react";
+import { EditorHeader , Editor, Output } from "../Index";
 
 
 const CodeEditorPage = () => {
 
-  const [currentCode, setCurrentCode] = useState({
-    title: '',
-    language: '',
-    content: ''
-  });
-
-  const [output, setOutput] = useState("")
 
   return (
-    <div className='bg-[#343a40]'>
-
-      {/* header of editor */}
-      <EditorHeader currentCode={currentCode} setOutput={setOutput} />
-
-      <div className='flex'>
-
-        {/* File Explorer */}
-        <FileExplorer setCurrentCode={setCurrentCode} />
-
-        {/* code editor */}
-        <CodeEditor
-          code={currentCode.content}
-          onChange={(value) => setCurrentCode({ ...currentCode, content: value })}
-          selectedLanguage={currentCode.language}
-        />
-
-        {/* output */}
-        <Output result={output} />
+    <div className='bg-gradient-to-b from-gray-900 to-gray-950 w-full h-screen'>
+      <EditorHeader />
+      <div className="w-full flex gap-4 px-4">
+        <Editor />
+        <Output />
       </div>
     </div>
 

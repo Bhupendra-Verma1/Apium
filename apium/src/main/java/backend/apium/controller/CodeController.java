@@ -36,7 +36,7 @@ public class CodeController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Code> getCodeById(@PathVariable Long id) {
+    public ResponseEntity<Code> getCodeById(@PathVariable String id) {
         return codeService.getCodeById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -44,7 +44,7 @@ public class CodeController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Code> updateCode(@RequestHeader("X-USER-EMAIL") String email,
-                                           @PathVariable Long id,
+                                           @PathVariable String id,
                                            @RequestBody Code code) {
         Code updatedCode = codeService.updateCode(id, code, getUserEmailFromHeader(email));
         return ResponseEntity.ok(updatedCode);
@@ -52,7 +52,7 @@ public class CodeController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteCode(@RequestHeader("X-USER-EMAIL") String email,
-                                             @PathVariable Long id) {
+                                             @PathVariable String id) {
         codeService.deleteCode(id, getUserEmailFromHeader(email));
         return ResponseEntity.ok("Code snippet deleted successfully");
     }

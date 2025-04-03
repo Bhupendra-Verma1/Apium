@@ -1,13 +1,15 @@
 import React from 'react'
 import {Navbar} from './Index'
 import {Outlet} from 'react-router-dom'
-function Layout() {
+function App() {
   return (
-    <>
-        <Navbar />
+    <div className='w-full'>
+      <Navbar />
+      <main>
         <Outlet />
-    </>
+      </main>
+    </div>
   )
 }
 
-export default Layout
+export default App
