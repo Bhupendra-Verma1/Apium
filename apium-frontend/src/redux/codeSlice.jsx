@@ -1,11 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { Languages } from "lucide-react";
-import { act } from "react";
-import { createSessionStorage } from "react-router-dom";
 
 const initialState = {
-    language : "",
-    content : "",
+    codeDetails : {
+        title : "",
+        language : "",
+        content : ""
+    },
     isRunning: false,
     output : "",
     error : ""
@@ -15,12 +15,17 @@ const codeSlice = createSlice({
     name : "code",
     initialState,
     reducers : {
-        setLanguage : (state, action) => {
-            state.language = action.payload
+
+        setCodeDetails : (state, action) => {
+            state.codeDetails = action.payload
         },
 
         setContent : (state, action) => {
-            state.content = action.payload
+            state.codeDetails.content = action.payload
+        },
+
+        setLanguage: (state, action) => {
+            state.codeDetails.language = action.payload
         },
 
         setRunning : (state, action) => {
@@ -38,5 +43,5 @@ const codeSlice = createSlice({
 })
 
 
-export const {setLanguage, setContent, setRunning, setError, setOutput} = codeSlice.actions
+export const {setCodeDetails, setContent, setLanguage, setRunning, setError, setOutput} = codeSlice.actions
 export default codeSlice.reducer

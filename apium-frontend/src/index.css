@@ -1,5 +1,5 @@
 @import "tailwindcss";
 
 ::-ms-reveal {
-    display: none;
-  }
+  display: none;
+}

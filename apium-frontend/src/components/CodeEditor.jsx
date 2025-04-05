@@ -2,14 +2,39 @@ import React from 'react';
 import Editor from '@monaco-editor/react';
 
 const CodeEditor = ({ code, onChange, selectedLanguage }) => {
+
+  const handleEditorWillMount = (monaco) => {
+    monaco.editor.defineTheme("custom-dark", {
+      base: "vs-dark",
+      inherit: true,
+      rules: [
+        { token: "", foreground: "D4D4D4", background: "1E1E1E" },
+        { token: "comment", foreground: "6A9955", fontStyle: "italic" },
+        { token: "keyword", foreground: "C586C0" },
+        { token: "number", foreground: "B5CEA8" },
+        { token: "string", foreground: "CE9178" },
+        { token: "operator", foreground: "D4D4D4" },
+        { token: "variable", foreground: "9CDCFE" },
+        { token: "function", foreground: "DCDCAA" },
+      ],
+      colors: {
+        "editor.background": "#0d0e14",
+        "editor.lineHighlightBackground": "#2a2a2a",
+        "editorLineNumber.foreground": "#858585",
+        "editorCursor.foreground": "#AEAFAD",
+        "editorIndentGuide.background": "#404040",
+      },
+    });
+  };
+
   return (
-    <div className='w-1/2'>
-      <div className='px-4 font-serif py-1 bg-black/80 w-full h-8 flex items-center'></div>
-      <div className="rounded-b-lg overflow-hidden">
+    <div className="w-full">
+      <div className="rounded-lg overflow-hidden bg-[#0d0e14] pt-4 border border-gray-800">
         <Editor
-          height="600px"
-          theme="vs-dark" // Options: "light", "vs-dark", "hc-black"
-          language={selectedLanguage || "javascript"} // Default to JavaScript
+          height="395px"
+          beforeMount={handleEditorWillMount} // <-- important
+          theme="custom-dark"
+          language={selectedLanguage || "java"}
           value={code}
           onChange={onChange}
           options={{

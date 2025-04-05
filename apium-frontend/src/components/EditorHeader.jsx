@@ -1,13 +1,14 @@
-import React, { useEffect } from 'react'
-import { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import CodeService from '../services/CodeService';
 import { Select } from '../Index'
+import { useDispatch, useSelector } from 'react-redux'
+import { setCodeDetails } from '../redux/codeSlice'
 
-export default function EditorHeader({ currentCode, setOutput, setUserEmail, setOutputLoading }) {
+export default function EditorHeader() {
 
-    const userEmail = localStorage.getItem('userEmail');
     const navigate = useNavigate()
+    const dispatch = useDispatch();
+
     const languages = [
         { value: "javascript", label: "JavaScript", logo: "https://upload.wikimedia.org/wikipedia/commons/6/6a/JavaScript-logo.png" },
         { value: "python", label: "Python", logo: "https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" },
@@ -26,38 +27,141 @@ export default function EditorHeader({ currentCode, setOutput, setUserEmail, set
 
     const [selectedLanguage, setSelectedLanguage] = useState(languages[0])
 
-    const [loading, setLoading] = useState(false);
-    const [success, setSuccess] = useState(false);
-    const [runFlag, setRunFlag] = useState(false)
 
-    const runCode = async () => {
-        setRunFlag(true)
-        setOutputLoading(true)
-        try {
-            const response = await CodeService.executeCode(currentCode)
-            setOutput(response.data)
-            console.log(response.data)
-        } catch (error) {
-            alert("failed to run the code")
-        } finally {
-            setRunFlag(false)
-            setOutputLoading(false);
+    useEffect(() => {
+        if (selectedLanguage) {
+            const title = getDefaultTitle(selectedLanguage.value)
+            const content = getDefaultContent(selectedLanguage.value)
+            const language = selectedLanguage.value
+            dispatch(setCodeDetails({title, language, content}))
         }
-    }
+    }, [selectedLanguage])
 
-    const saveAllCode = async () => {
-        setLoading(true);
-        try {
-            const response = await CodeService.updateCode(userEmail, currentCode)
-            console.log(response.data)
-        } catch (error) {
-            alert("error in saving files")
-            console.log(error)
-        } finally {
-            setLoading(false);
-            setUserEmail()
+    const getDefaultContent = (language) => {
+        language = language.toLowerCase();
+        switch (language) {
+            case "javascript":
+                return `console.log("Hello, World!");`;
+
+            case "python":
+                return `print("Hello, World!")`;
+
+            case "java":
+                return `public class Main {
+          public static void main(String[] args) {
+              System.out.println("Hello, World!");
+          }
+      }`;
+
+            case "c++":
+                return `#include <iostream>
+      using namespace std;
+      
+      int main() {
+          cout << "Hello, World!" << endl;
+          return 0;
+      }`;
+
+            case "c":
+                return `#include <stdio.h>
+      
+      int main() {
+          printf("Hello, World!\\n");
+          return 0;
+      }`;
+
+            case "rust":
+                return `fn main() {
+          println!("Hello, World!");
+      }`;
+
+            case "go":
+                return `package main
+      
+      import "fmt"
+      
+      func main() {
+          fmt.Println("Hello, World!")
+      }`;
+
+            case "r":
+                return `print("Hello, World!")`;
+
+            case "php":
+                return `<?php
+      echo "Hello, World!";
+      ?>`;
+
+            case "html":
+                return `<!DOCTYPE html>
+      <html>
+      <head>
+          <title>Hello</title>
+      </head>
+      <body>
+          <h1>Hello, World!</h1>
+      </body>
+      </html>`;
+
+            case "sql":
+                return `-- This is a comment
+      SELECT 'Hello, World!' AS greeting;`;
+
+            case "c#":
+                return `using System;
+      
+      class Program {
+          static void Main() {
+              Console.WriteLine("Hello, World!");
+          }
+      }`;
+
+            case "swift":
+                return `import Swift
+      
+      print("Hello, World!")`;
+
+            default:
+                return `// No default content available for ${language}`;
         }
-    }
+    };
+
+    const getDefaultTitle = (language) => {
+        language = language.toLowerCase()
+        switch (language) {
+          case "javascript":
+            return "script.js";
+          case "python":
+            return "main.py";
+          case "java":
+            return "Main.java";
+          case "c++":
+            return "main.cpp";
+          case "c":
+            return "main.c";
+          case "rust":
+            return "main.rs";
+          case "go":
+            return "main.go";
+          case "r":
+            return "main.r";
+          case "php":
+            return "index.php";
+          case "html":
+            return "index.html";
+          case "sql":
+            return "query.sql";
+          case "c#":
+            return "Program.cs";
+          case "swift":
+            return "main.swift";
+          default:
+            return "main.txt"; // fallback
+        }
+      };
+      
+
+
 
     return (
         <div className="w-full p-4">
@@ -91,7 +195,11 @@ export default function EditorHeader({ currentCode, setOutput, setUserEmail, set
                         <div className='text-white font-light'>GitHub Dark</div>
                         <input type="radio" className='mt-1 outline-none' />
                     </div>
+
+
                     <div><Select options={languages} selected={selectedLanguage} onChange={setSelectedLanguage} /></div>
+
+
                     <button
                         className="flex justify-center items-center bg-gradient-to-r from-[#090979] to-[#000cff] border border-blue-600 backdrop-blur-2xl py-0.5 rounded-lg gap-1/5 px-2"
                     >
