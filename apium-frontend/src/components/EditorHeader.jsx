@@ -2,18 +2,17 @@ import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Select } from '../Index'
 import { useDispatch, useSelector } from 'react-redux'
-import { setCodeDetails } from '../redux/codeSlice'
+import { setCodeDetails, setRunning, setOutput, setSuccess, setError } from '../redux/codeSlice'
+import CodeService from '../services/CodeService'
+import store from '../redux/store'
 
 export default function EditorHeader() {
-
-    const navigate = useNavigate()
-    const dispatch = useDispatch();
 
     const languages = [
         { value: "javascript", label: "JavaScript", logo: "https://upload.wikimedia.org/wikipedia/commons/6/6a/JavaScript-logo.png" },
         { value: "python", label: "Python", logo: "https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" },
         { value: "java", label: "Java", logo: "https://upload.wikimedia.org/wikipedia/en/3/30/Java_programming_language_logo.svg" },
-        { value: "c++", label: "C++", logo: "https://upload.wikimedia.org/wikipedia/commons/1/18/ISO_C%2B%2B_Logo.svg" },
+        { value: "cpp", label: "C++", logo: "https://upload.wikimedia.org/wikipedia/commons/1/18/ISO_C%2B%2B_Logo.svg" },
         { value: "c", label: "C", logo: "https://upload.wikimedia.org/wikipedia/commons/1/18/C_Programming_Language.svg" },
         { value: "rust", label: "Rust", logo: "https://upload.wikimedia.org/wikipedia/commons/d/d5/Rust_programming_language_black_logo.svg" },
         { value: "go", label: "Go", logo: "https://upload.wikimedia.org/wikipedia/commons/0/05/Go_Logo_Blue.svg" },
@@ -21,11 +20,14 @@ export default function EditorHeader() {
         { value: "php", label: "PHP", logo: "https://upload.wikimedia.org/wikipedia/commons/2/27/PHP-logo.svg" },
         { value: "html", label: "HTML", logo: "https://upload.wikimedia.org/wikipedia/commons/6/61/HTML5_logo_and_wordmark.svg" },
         { value: "sql", label: "SQL", logo: "https://upload.wikimedia.org/wikipedia/commons/d/d7/Sql_data_base_with_logo.svg" },
-        { value: "c#", label: "C#", logo: "https://upload.wikimedia.org/wikipedia/commons/b/bd/Logo_C_sharp.svg" },
+        { value: "csharp", label: "C#", logo: "https://upload.wikimedia.org/wikipedia/commons/b/bd/Logo_C_sharp.svg" },
         { value: "swift", label: "Swift", logo: "https://www.svgrepo.com/show/452110/swift.svg" },
     ];
 
     const [selectedLanguage, setSelectedLanguage] = useState(languages[0])
+    const [loader, setLoader] = useState(false)
+    const navigate = useNavigate()
+    const dispatch = useDispatch();
 
 
     useEffect(() => {
@@ -33,7 +35,7 @@ export default function EditorHeader() {
             const title = getDefaultTitle(selectedLanguage.value)
             const content = getDefaultContent(selectedLanguage.value)
             const language = selectedLanguage.value
-            dispatch(setCodeDetails({title, language, content}))
+            dispatch(setCodeDetails({ title, language, content }))
         }
     }, [selectedLanguage])
 
@@ -47,79 +49,79 @@ export default function EditorHeader() {
                 return `print("Hello, World!")`;
 
             case "java":
-                return `public class Main {
-          public static void main(String[] args) {
-              System.out.println("Hello, World!");
-          }
-      }`;
+                return `public class Main {  
+    public static void main(String[] args) {
+        System.out.println("Hello, World!");
+    }
+}`;
 
-            case "c++":
+            case "cpp":
                 return `#include <iostream>
-      using namespace std;
+using namespace std;
       
-      int main() {
-          cout << "Hello, World!" << endl;
-          return 0;
-      }`;
+int main() {
+    cout << "Hello, World!" << endl;
+    return 0;
+}`;
 
             case "c":
                 return `#include <stdio.h>
       
-      int main() {
-          printf("Hello, World!\\n");
-          return 0;
-      }`;
+int main() {
+    printf("Hello, World!\\n");
+    return 0;
+}`;
 
             case "rust":
                 return `fn main() {
-          println!("Hello, World!");
-      }`;
+    println!("Hello, World!");
+}`;
 
             case "go":
                 return `package main
       
-      import "fmt"
+import "fmt"
       
-      func main() {
-          fmt.Println("Hello, World!")
-      }`;
+func main() {
+    fmt.Println("Hello, World!")
+}`;
 
             case "r":
                 return `print("Hello, World!")`;
 
             case "php":
                 return `<?php
-      echo "Hello, World!";
-      ?>`;
+    echo "Hello, World!";
+?>`;
 
             case "html":
                 return `<!DOCTYPE html>
-      <html>
-      <head>
-          <title>Hello</title>
-      </head>
-      <body>
-          <h1>Hello, World!</h1>
-      </body>
-      </html>`;
+<html>
+    <head>
+        <title>Hello</title>
+    </head>
+    <body>
+        <h1>Hello, World!</h1>
+    </body>
+</html>`;
 
             case "sql":
                 return `-- This is a comment
-      SELECT 'Hello, World!' AS greeting;`;
+SELECT 'Hello, World!' AS greeting;`;
 
-            case "c#":
+            case "csharp":
                 return `using System;
       
-      class Program {
-          static void Main() {
-              Console.WriteLine("Hello, World!");
-          }
-      }`;
+class Program {
+    static void Main() {
+        Console.WriteLine("Hello, World!");
+    }
+}`;
 
             case "swift":
                 return `import Swift
       
-      print("Hello, World!")`;
+print("Hello, World!")`;
 
             default:
                 return `// No default content available for ${language}`;
@@ -129,37 +131,60 @@ export default function EditorHeader() {
     const getDefaultTitle = (language) => {
         language = language.toLowerCase()
         switch (language) {
-          case "javascript":
-            return "script.js";
-          case "python":
-            return "main.py";
-          case "java":
-            return "Main.java";
-          case "c++":
-            return "main.cpp";
-          case "c":
-            return "main.c";
-          case "rust":
-            return "main.rs";
-          case "go":
-            return "main.go";
-          case "r":
-            return "main.r";
-          case "php":
-            return "index.php";
-          case "html":
-            return "index.html";
-          case "sql":
-            return "query.sql";
-          case "c#":
-            return "Program.cs";
-          case "swift":
-            return "main.swift";
-          default:
-            return "main.txt"; // fallback
+            case "javascript":
+                return "script.js";
+            case "python":
+                return "main.py";
+            case "java":
+                return "Main.java";
+            case "c++":
+                return "main.cpp";
+            case "c":
+                return "main.c";
+            case "rust":
+                return "main.rs";
+            case "go":
+                return "main.go";
+            case "r":
+                return "main.r";
+            case "php":
+                return "index.php";
+            case "html":
+                return "index.html";
+            case "sql":
+                return "query.sql";
+            case "c#":
+                return "Program.cs";
+            case "swift":
+                return "main.swift";
+            default:
+                return "main.txt"; // fallback
         }
-      };
-      
+    };
+
+    const handleRun = async () => {
+        const latestCode = store.getState().code.codeDetails;
+        dispatch(setOutput(""))
+        dispatch(setError(""))
+        setLoader(true)
+        dispatch(setRunning({ var: true }))
+        try {
+            if (latestCode) {
+                const response = await CodeService.executeCode({ ...latestCode })
+                if (response) {
+                    dispatch(setOutput(response.data))
+                }
+            }
+            dispatch(setSuccess({ var: true }))
+        } catch (error) {
+            dispatch(setError(error.response.data))
+            dispatch(setSuccess({ var: false }))
+        } finally {
+            dispatch(setRunning({ var: false }))
+            setLoader(false)
+        }
+    }
+
 
 
 
@@ -191,9 +216,8 @@ export default function EditorHeader() {
                     <div
                         className="flex justify-center items-center bg-gray-600/30 border border-gray-600 backdrop-blur-2xl py-0.5 rounded-md px-2 gap-1"
                     >
-                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className='w-4 h-4'><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M8 10.5C8 11.3284 7.32843 12 6.5 12C5.67157 12 5 11.3284 5 10.5C5 9.67157 5.67157 9 6.5 9C7.32843 9 8 9.67157 8 10.5Z" fill="white"></path> <path d="M10.5 8C11.3284 8 12 7.32843 12 6.5C12 5.67157 11.3284 5 10.5 5C9.67157 5 9 5.67157 9 6.5C9 7.32843 9.67157 8 10.5 8Z" fill="white"></path> <path d="M17 6.5C17 7.32843 16.3284 8 15.5 8C14.6716 8 14 7.32843 14 6.5C14 5.67157 14.6716 5 15.5 5C16.3284 5 17 5.67157 17 6.5Z" fill="white"></path> <path d="M7.5 17C8.32843 17 9 16.3284 9 15.5C9 14.6716 8.32843 14 7.5 14C6.67157 14 6 14.6716 6 15.5C6 16.3284 6.67157 17 7.5 17Z" fill="white"></path> <path fill-rule="evenodd" clip-rule="evenodd" d="M1 12C1 5.92487 5.92487 1 12 1C17.9712 1 23 5.34921 23 11V11.0146C23 11.543 23.0001 12.4458 22.6825 13.4987C21.8502 16.2575 18.8203 16.9964 16.4948 16.4024C16.011 16.2788 15.5243 16.145 15.0568 16.0107C14.2512 15.7791 13.5177 16.4897 13.6661 17.2315L13.9837 18.8197L14.0983 19.5068C14.3953 21.289 13.0019 23.1015 11.0165 22.8498C7.65019 22.423 5.11981 21.1007 3.43595 19.1329C1.75722 17.171 1 14.6613 1 12ZM12 3C7.02944 3 3 7.02944 3 12C3 14.2854 3.64673 16.303 4.95555 17.8326C6.25924 19.3561 8.3 20.4894 11.2681 20.8657C11.7347 20.9249 12.2348 20.4915 12.1255 19.8356L12.0163 19.1803L11.7049 17.6237C11.2467 15.3325 13.4423 13.4657 15.6093 14.0885C16.0619 14.2186 16.529 14.3469 16.9897 14.4646C18.7757 14.9208 20.3744 14.2249 20.7677 12.921C20.997 12.161 21 11.5059 21 11C21 6.65079 17.0745 3 12 3Z" fill="white"></path> </g></svg>
-                        <div className='text-white font-light'>GitHub Dark</div>
-                        <input type="radio" className='mt-1 outline-none' />
+                        <svg viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg" className='h-5 w-6'><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M97.8357 54.6682C177.199 59.5311 213.038 52.9891 238.043 52.9891C261.298 52.9891 272.24 129.465 262.683 152.048C253.672 173.341 100.331 174.196 93.1919 165.763C84.9363 156.008 89.7095 115.275 89.7095 101.301" stroke="white" stroke-opacity="0.9" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M98.3318 190.694C-10.6597 291.485 121.25 273.498 148.233 295.083" stroke="white" stroke-opacity="0.9" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M98.3301 190.694C99.7917 213.702 101.164 265.697 100.263 272.898" stroke="white" stroke-opacity="0.9" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M208.308 136.239C208.308 131.959 208.308 127.678 208.308 123.396" stroke="white" stroke-opacity="0.9" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M177.299 137.271C177.035 133.883 177.3 126.121 177.3 123.396" stroke="white" stroke-opacity="0.9" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M203.398 241.72C352.097 239.921 374.881 226.73 312.524 341.851" stroke="white" stroke-opacity="0.9" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M285.55 345.448C196.81 341.85 136.851 374.229 178.223 264.504" stroke="white" stroke-opacity="0.9" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M180.018 345.448C160.77 331.385 139.302 320.213 120.658 304.675" stroke="white" stroke-opacity="0.9" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M218.395 190.156C219.024 205.562 219.594 220.898 219.594 236.324" stroke="white" stroke-opacity="0.9" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M218.395 190.156C225.896 202.037 232.97 209.77 241.777 230.327" stroke="white" stroke-opacity="0.9" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M80.1174 119.041C75.5996 120.222 71.0489 119.99 66.4414 120.41" stroke="white" stroke-opacity="0.9" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M59.5935 109.469C59.6539 117.756 59.5918 125.915 58.9102 134.086" stroke="white" stroke-opacity="0.9" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M277.741 115.622C281.155 115.268 284.589 114.823 287.997 114.255" stroke="white" stroke-opacity="0.9" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M291.412 104.682C292.382 110.109 292.095 115.612 292.095 121.093" stroke="white" stroke-opacity="0.9" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M225.768 116.466C203.362 113.993 181.657 115.175 160.124 118.568" stroke="white" stroke-opacity="0.9" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                        <div className='text-white font-light'>AI-Suggestion</div>
                     </div>
 
 
@@ -201,17 +225,28 @@ export default function EditorHeader() {
 
 
                     <button
-                        className="flex justify-center items-center bg-gradient-to-r from-[#090979] to-[#000cff] border border-blue-600 backdrop-blur-2xl py-0.5 rounded-lg gap-1/5 px-2"
+                        className="flex justify-center items-center bg-gradient-to-r from-[#09792b] to-[#06d32b] border border-green-600 backdrop-blur-2xl py-0.5 rounded-lg px-2"
+                        onClick={handleRun}
+                        disabled={loader}
                     >
-                        <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="white" className="w-5 h-5">
-                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                            <g id="SVGRepo_iconCarrier">
-                                <path d="M1.8 1.01l-.78.41v12l.78.42 9-6v-.83l-9-6zm.22 11.48V2.36l7.6 5.07-7.6 5.06z"></path>
-                            </g>
-                        </svg>
-
-                        <div className='text-white font-light'>Run Code</div>
+                        {loader ? (
+                            <div className='flex justify-center items-center gap-2 duration-200'>
+                                <div className='w-4 h-4 border-2 border-white border-t-transparent animate-spin rounded-full'></div>
+                                <div className='text-white font-light'>Running...</div>
+                            </div>
+                        ) : (
+                            <div className='flex justify-center items-center gap-1/5'>
+                                <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="white" className="w-5 h-5">
+                                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                    <g id="SVGRepo_iconCarrier">
+                                        <path d="M1.8 1.01l-.78.41v12l.78.42 9-6v-.83l-9-6zm.22 11.48V2.36l7.6 5.07-7.6 5.06z"></path>
+                                    </g>
+                                </svg>
+                                <div className='text-white font-light'>Run Code</div>
+                            </div>
+                        )
+                        }
                     </button>
                     <div className='flex gap-1 justify-center items-center'>
                         <div>

@@ -28,8 +28,8 @@ const CodeService = {
         });
     },
 
-    executeCode : async ({ language, content }) => { 
-        return await axios.post('http://localhost:8080/execute', { language, content }, {  
+    executeCode : async ({title, language, content }) => { 
+        return await axios.post('http://localhost:8080/execute', {title, language, content }, {  
             headers: {  
                 'Authorization' : `Bearer ${localStorage.getItem('token')}`
             }

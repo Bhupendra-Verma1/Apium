@@ -18,10 +18,10 @@ public class CodeExecutionController {
     @PostMapping
     public ResponseEntity<String> executeCode(@RequestBody CodeRequest request) {
         try {
-            String output = service.executeCode(request.getLanguage(), request.getContent());
+            String output = service.executeCode(request.getTitle(), request.getLanguage(), request.getContent());
             return ResponseEntity.ok(output);
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("Error executing code: " + e.getMessage());
+            return ResponseEntity.status(500).body(e.getMessage());
         }
     }
 }

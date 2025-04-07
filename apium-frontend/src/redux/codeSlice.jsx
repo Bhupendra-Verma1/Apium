@@ -6,7 +6,8 @@ const initialState = {
         language : "",
         content : ""
     },
-    isRunning: false,
+    isRunning : false,
+    success : true,
     output : "",
     error : ""
 }
@@ -20,16 +21,12 @@ const codeSlice = createSlice({
             state.codeDetails = action.payload
         },
 
-        setContent : (state, action) => {
-            state.codeDetails.content = action.payload
-        },
-
-        setLanguage: (state, action) => {
-            state.codeDetails.language = action.payload
+        setSuccess : (state, action) => {
+            state.success = action.payload.var
         },
 
         setRunning : (state, action) => {
-            state.isRunning = action.payload
+            state.isRunning = action.payload.var
         },
 
         setOutput : (state, action) => {
@@ -43,5 +40,5 @@ const codeSlice = createSlice({
 })
 
 
-export const {setCodeDetails, setContent, setLanguage, setRunning, setError, setOutput} = codeSlice.actions
+export const {setCodeDetails, setSuccess, setContent, setLanguage, setRunning, setError, setOutput} = codeSlice.actions
 export default codeSlice.reducer

@@ -7,16 +7,16 @@ import java.util.concurrent.*;
 @Service
 public class CodeExecutionService {
 
-    private static final long TIMEOUT_SECONDS = 10; // Prevent long-running code
+    private static final long TIMEOUT_SECONDS = 15; // Prevent long-running code
 
-    public String executeCode(String language, String code) {
+    public String executeCode(String title, String language, String code) throws Exception {
         String result = "";
         File tempFile = null;
         Process process = null;
 
         try {
             // Create a temporary file
-            tempFile = createTempFile(language, code);
+            tempFile = createTempFile(title, language, code);
             if (tempFile == null) {
                 return "Error: Failed to create temporary file.";
             }
@@ -28,28 +28,30 @@ public class CodeExecutionService {
             }
 
             // Execute the command with timeout
-            result = executeWithTimeout(command);
-
-        } catch (Exception e) {
-            result = "Error executing code: " + e.getMessage();
+            return executeWithTimeout(command);
         } finally {
             // Cleanup: Delete temp file
             if (tempFile != null) {
                 tempFile.delete();
             }
         }
-
-        return result;
     }
 
-    private File createTempFile(String language, String code) throws IOException {
-        String extension = language.equalsIgnoreCase("java") ? ".java" : ".py";
-        File tempFile = File.createTempFile("code_", extension);
+    private File createTempFile(String title, String language, String code) throws IOException {
+        // Get the system's temporary directory
+        File tempDir = new File(System.getProperty("java.io.tmpdir"));
+
+        // Create the file object using the provided title (e.g., "main.java")
+        File tempFile = new File(tempDir, title);
+
+        // Write code to the file
         try (FileWriter writer = new FileWriter(tempFile)) {
             writer.write(code);
         }
+
         return tempFile;
     }
+
 
     private String getExecutionCommand(String language, File tempFile) {
         if ("java".equalsIgnoreCase(language)) {
@@ -86,13 +88,19 @@ public class CodeExecutionService {
         });
 
         try {
-            return future.get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
+            String output = future.get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
+            int exitCode = process.waitFor(); // Wait for process to complete
+
+            if (exitCode != 0) {
+                throw new RuntimeException("Code execution failed with exit code " + exitCode + ":\n" + output);
+            }
+
+            return output;
         } catch (TimeoutException e) {
             process.destroy();
-            return "Error: Code execution timed out.";
+            throw new RuntimeException("Error: Code execution timed out.");
         } finally {
             executor.shutdown();
         }
     }
-
 }
