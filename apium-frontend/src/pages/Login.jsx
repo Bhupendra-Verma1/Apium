@@ -2,6 +2,9 @@ import { useState } from 'react';
 import AuthService from '../services/AuthService'
 import { useNavigate, Link } from 'react-router-dom'
 import { Eye, EyeOff } from 'lucide-react'
+import { useSelector, useDispatch } from 'react-redux';
+import { setCredentials } from '../redux/authSlice';
+import toast from 'react-hot-toast';
 
 const Login = () => {
 
@@ -9,28 +12,32 @@ const Login = () => {
   const [failed, setFailed] = useState(false)
   const [showPassword, setShowPassword] = useState(false);
 
-  const [formData, setFormData] = useState({ email: '', password: '' });
-  const navigate = useNavigate();
-
+  const credentials = useSelector((state) => state.auth.credentials)
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
   const handleChange = e => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    dispatch(setCredentials({...credentials, [e.target.name]: e.target.value }))
   };
 
   const handleSubmit = async e => {
     e.preventDefault();
     setLoading(true)
-    try {
-      const response = await AuthService.login(formData)
+      
+    const response = await AuthService.login({email : credentials.email, password : credentials.password})
+
+    if(response) {
       localStorage.setItem('token', response.data.token)
-      localStorage.setItem('userEmail', formData.email)
-      setTimeout(() => setFailed(false), 2000)
-      alert('Login successful!');
+      localStorage.setItem('userEmail', credentials.email)
+      setTimeout(() => setFailed(false), 1000)
+      toast.success("Login successful")
       navigate('/editor');
-    } catch (error) {
+    } else {
+
       setFailed(true)
-    } finally {
-      setLoading(false);
+      toast.error("Failed to login")
     }
+
+    setLoading(false)
   };
 
   return (
@@ -89,7 +96,7 @@ const Login = () => {
               </button>
             </div>
           </div>
-          <button className={`w-full rounded-md h-9 text-white font-medium flex justify-center gap-3 items-center ${(formData.email !== "" && formData.password !== "") ? "bg-orange-500 hover:bg-orange-300" : "bg-red-300"} mt-3 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`} type="submit">
+          <button className={`w-full rounded-md h-9 text-white font-medium flex justify-center gap-3 items-center ${(credentials?.email !== "" && credentials?.password !== "") ? "bg-orange-500 hover:bg-orange-300" : "bg-red-300"} mt-3 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`} type="submit">
             Log in
             {loading ? (
               <div className="w-3 h-3 border-2 mt-1 border-t-transparent rounded-full animate-spin"></div>

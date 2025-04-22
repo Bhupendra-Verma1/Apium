@@ -29,9 +29,11 @@ public class Code {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
+
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
     @Column(nullable = false)
     private LocalDateTime updatedAt = LocalDateTime.now();
+
 }

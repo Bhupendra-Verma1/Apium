@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/execute")
+@RequestMapping("api/execute")
 public class CodeExecutionController {
 
     private final CodeExecutionService service;

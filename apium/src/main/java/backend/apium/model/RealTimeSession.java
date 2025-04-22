@@ -7,15 +7,15 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "real_time_sessions")
-@Getter
 @Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
+
 public class RealTimeSession {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     @ManyToOne
     @JoinColumn(name = "code_id", nullable = false)

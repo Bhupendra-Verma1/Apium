@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { FaUser, FaEnvelope, FaQuestionCircle, FaComment, FaGithub, FaTwitter, FaDiscord } from 'react-icons/fa';
 import emailjs from "emailjs-com";
+import toast from 'react-hot-toast';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -44,7 +45,7 @@ const Contact = () => {
         message: formData.message,
       }, PUBLIC_KEY)
 
-      alert("Your message has been sent successfully!");
+      toast.success("Message send successfully")
     } catch (error) {
       console.error("FAILED...", error);
       alert("Failed to send the message. Please try again.");

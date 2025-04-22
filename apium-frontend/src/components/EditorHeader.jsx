@@ -5,37 +5,48 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setCodeDetails, setRunning, setOutput, setSuccess, setError } from '../redux/codeSlice'
 import CodeService from '../services/CodeService'
 import store from '../redux/store'
+import { useLocation } from "react-router-dom";
 
 export default function EditorHeader() {
 
     const languages = [
-        { value: "javascript", label: "JavaScript", logo: "https://upload.wikimedia.org/wikipedia/commons/6/6a/JavaScript-logo.png" },
-        { value: "python", label: "Python", logo: "https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" },
-        { value: "java", label: "Java", logo: "https://upload.wikimedia.org/wikipedia/en/3/30/Java_programming_language_logo.svg" },
-        { value: "cpp", label: "C++", logo: "https://upload.wikimedia.org/wikipedia/commons/1/18/ISO_C%2B%2B_Logo.svg" },
-        { value: "c", label: "C", logo: "https://upload.wikimedia.org/wikipedia/commons/1/18/C_Programming_Language.svg" },
-        { value: "rust", label: "Rust", logo: "https://upload.wikimedia.org/wikipedia/commons/d/d5/Rust_programming_language_black_logo.svg" },
-        { value: "go", label: "Go", logo: "https://upload.wikimedia.org/wikipedia/commons/0/05/Go_Logo_Blue.svg" },
-        { value: "r", label: "R", logo: "https://upload.wikimedia.org/wikipedia/commons/1/1b/R_logo.svg" },
-        { value: "php", label: "PHP", logo: "https://upload.wikimedia.org/wikipedia/commons/2/27/PHP-logo.svg" },
-        { value: "html", label: "HTML", logo: "https://upload.wikimedia.org/wikipedia/commons/6/61/HTML5_logo_and_wordmark.svg" },
-        { value: "sql", label: "SQL", logo: "https://upload.wikimedia.org/wikipedia/commons/d/d7/Sql_data_base_with_logo.svg" },
-        { value: "csharp", label: "C#", logo: "https://upload.wikimedia.org/wikipedia/commons/b/bd/Logo_C_sharp.svg" },
-        { value: "swift", label: "Swift", logo: "https://www.svgrepo.com/show/452110/swift.svg" },
+        { value: "javascript", label: "JavaScript", logo: "javascript.png" },
+        { value: "python", label: "Python", logo: "python.png" },
+        { value: "java", label: "Java", logo: "java.png" },
+        { value: "cpp", label: "C++", logo: "c++.png" },
+        { value: "c", label: "C", logo: "c.png" },
+        { value: "rust", label: "Rust", logo: "rust.png" },
+        { value: "go", label: "Go", logo: "go.png" },
+        { value: "r", label: "R", logo: "r.png" },
+        { value: "php", label: "PHP", logo: "php.svg" },
+        { value: "html", label: "HTML", logo: "html.png" },
+        { value: "sql", label: "SQL", logo: "sql.png" },
+        { value: "csharp", label: "C#", logo: "csharp.png" },
+        { value: "swift", label: "Swift", logo: "swift.svg" }
     ];
 
     const [selectedLanguage, setSelectedLanguage] = useState(languages[0])
     const [loader, setLoader] = useState(false)
     const navigate = useNavigate()
     const dispatch = useDispatch();
+    const location = useLocation();
+
+
+    useEffect(() => {
+        const initialLanguage = location.state?.aboutSelectedlanguage || "javascript";
+        const foundLanguage = languages.find(lang => lang.value === initialLanguage) || languages[0];
+        setSelectedLanguage(foundLanguage);
+    }, [location.state?.aboutSelectedlanguage]);
+
 
 
     useEffect(() => {
         if (selectedLanguage) {
+            const id = ""
             const title = getDefaultTitle(selectedLanguage.value)
             const content = getDefaultContent(selectedLanguage.value)
             const language = selectedLanguage.value
-            dispatch(setCodeDetails({ title, language, content }))
+            dispatch(setCodeDetails({ id, title, language, content }))
         }
     }, [selectedLanguage])
 
@@ -137,7 +148,7 @@ print("Hello, World!")`;
                 return "main.py";
             case "java":
                 return "Main.java";
-            case "c++":
+            case "cpp":
                 return "main.cpp";
             case "c":
                 return "main.c";
@@ -153,7 +164,7 @@ print("Hello, World!")`;
                 return "index.html";
             case "sql":
                 return "query.sql";
-            case "c#":
+            case "csharp":
                 return "Program.cs";
             case "swift":
                 return "main.swift";

@@ -1,11 +1,13 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import store from './redux/store.jsx'
+import store from './redux/store.js'
 import {Provider} from 'react-redux'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import { Home, Register, Login, About, Contact, CodeEditorPage, ResetPassword } from './Index.js'
+import { Home, Register, Login, About, Contact, CodeEditorPage, ResetPassword, Profile, ShareSnippet, Snippet } from './Index.js'
+
 import './index.css'
 import App from './App.jsx'
+import EditorLayout from './EditorLayout.jsx'
 
 const router = createBrowserRouter([
   {
@@ -36,11 +38,29 @@ const router = createBrowserRouter([
         path : '/reset',
         element : <ResetPassword />
       },
+      {
+        path : "/profile",
+        element : <Profile />
+      },
+      {
+        path : "/snippets",
+        element : <ShareSnippet />
+      },
+      {
+        path : "/snippet",
+        element : <Snippet />
+      }
     ]
   },
   {
     path : "/editor",
-    element : <CodeEditorPage />
+    element : <EditorLayout />,
+    children : [
+      {
+        path : "",
+        element : <CodeEditorPage />
+      },
+    ]
   }
 ])
 

@@ -1,4 +1,33 @@
+
+@font-face {
+  font-family: Poppins-bold;
+  src: url("assets/fonts/Poppins-Bold.ttf");
+}
+
+@font-face {
+  font-family: Inter;
+  src: url("assets/fonts/Inter_18pt-Regular.ttf");
+}
+
+@font-face {
+  font-family: Poppins;
+  src: url("assets/fonts/Poppins-Regular.ttf");
+}
+
+@font-face {
+  font-family: Poppins-medium;
+  src: url("assets/fonts/Poppins-Medium.ttf");
+}
+
 @import "tailwindcss";
+
+
+@theme {
+  --font-poppins-bold : Poppins-bold, 'sans-serif';
+  --font-inter : Inter, 'sans-serif';
+  --font-poppins : Poppins, 'sans-serif';
+  --font-poppins-medium : Poppins-medium, 'sans-serif';
+}
 
 ::-ms-reveal {
   display: none;
@@ -10,7 +39,6 @@
   --scrollbar-track-color: transparent;
   --scrollbar-thumb-color: #495057;
   --scrollbar-thumb-hover-color: #6c757d;
-
 }
 
 ::-webkit-scrollbar {

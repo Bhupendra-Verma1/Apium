@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/ai-suggestions")
+@RequestMapping("api/ai-suggestions")
 public class GeminiSuggestionController {
 
     private final GeminiAIService geminiAIService;

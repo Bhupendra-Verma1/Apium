@@ -1,48 +1,55 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import AuthService from '../services/AuthService';
+import { useNavigate, Link, } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 import { Eye, EyeOff } from 'lucide-react'
+import { setCredentials } from '../redux/authSlice'
+import toast from 'react-hot-toast';
+import AuthService from '../services/AuthService';
 
 const Register = () => {
-  const [loading, setLoading] = useState(false)
-  const [showPassword, setShowPassword] = useState(false);
 
-  const [formData, setFormData] = useState({ username: '', email: '', password: '' });
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
+
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+
+  const credentials = useSelector((state) => state.auth.credentials)
+
 
   const handleChange = e => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+    dispatch(setCredentials({ ...credentials, [e.target.name]: e.target.value }))
+    console.log(credentials)
+  }
 
   const handleSubmit = async e => {
     e.preventDefault();
     setLoading(true)
-    try {
-      await AuthService.register(formData)
-      alert('Registration successful!');
-      setTimeout(() => setLoading(true), 2000)
-      navigate('/login');
-    } catch (error) {
-      alert('Error registering user');
-    } finally {
-      setLoading(false);
+
+    const response = await AuthService.register(credentials)
+
+    if (response) {
+      
+      const res = await AuthService.login({ email: credentials.email, password: credentials.password })
+      if (res) {
+        localStorage.setItem('token', res.data.token)
+        localStorage.setItem('userEmail', credentials.email)
+        navigate('/editor')
+      } else {
+        navigate('/login')
+      }
+      
+      toast.success("Register successful")
+
+    } else {
+      toast.error("Faild to register")
     }
-    
+    setTimeout(() => setLoading(false), 1000)
   };
 
+  // Todo : make register error message
+
   return (
-    // <div style={{ padding: '2rem' }}>
-    //   <h2>Register</h2>
-    //   <form onSubmit={handleSubmit}>
-    //     <input name="username" placeholder="Username" onChange={handleChange} required />
-    //     <br />
-    //     <input name="email" type="email" placeholder="Email" onChange={handleChange} required />
-    //     <br />
-    //     <input name="password" type="password" placeholder="Password" onChange={handleChange} required />
-    //     <br />
-    //     <button type="submit">Register</button>
-    //   </form>
-    // </div>
     <div className='flex h-[80vh] mt-10 items-center justify-center w-full flex-col'>
       <div>
         <h2 className='text-3xl font-roboto'>Create an Apium account</h2>
@@ -108,7 +115,7 @@ const Register = () => {
               </button>
             </div>
           </div>
-          <button className={`w-full rounded-md h-9 text-white font-medium flex justify-center gap-3 items-center ${(formData.username !== "" && formData.email !== "" && formData.password !== "") ? "bg-orange-500 hover:bg-orange-300" : "bg-red-300"} mt-3 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`} type="submit">
+          <button className={`w-full rounded-md h-9 text-white font-medium flex justify-center gap-3 items-center ${(credentials?.username !== "" && credentials?.email !== "" && credentials?.password !== "") ? "bg-orange-500 hover:bg-orange-300" : "bg-red-300"} mt-3 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`} type="submit">
             Create Account
             {loading ? (
               <div className="w-3 h-3 border-2 border-t-transparent rounded-full animate-spin mt-1"></div>

@@ -19,6 +19,7 @@ public class CodeController {
 
     // For simplicity, we assume that the user's email is passed as a header.
     // In a real-world scenario, you would extract the authenticated user's email from the JWT.
+    // Todo : extract user from jwt token
     private String getUserEmailFromHeader(@RequestHeader("X-USER-EMAIL") String email) {
         return email;
     }

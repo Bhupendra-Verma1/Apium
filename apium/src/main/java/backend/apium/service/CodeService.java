@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class CodeService {
@@ -25,6 +26,7 @@ public class CodeService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         code.setUser(user);
+        code.setId(UUID.randomUUID().toString());
         return codeRepository.save(code);
     }
 
@@ -43,7 +45,7 @@ public class CodeService {
     // Update an existing code snippet
     public Code updateCode(String id, Code updatedCode, String email) {
         Code existingCode = codeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Code snippet not found"));
+                .orElseThrow(() -> new RuntimeException("null"));
 
         // Ensure that the code belongs to the authenticated user
         if (!existingCode.getUser().getEmail().equals(email)) {

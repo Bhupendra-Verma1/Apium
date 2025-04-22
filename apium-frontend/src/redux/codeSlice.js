@@ -1,7 +1,10 @@
+import { Description } from "@headlessui/react";
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
+
     codeDetails : {
+        id : "",
         title : "",
         language : "",
         content : ""
@@ -9,7 +12,8 @@ const initialState = {
     isRunning : false,
     success : true,
     output : "",
-    error : ""
+    error : "",
+    description : ""
 }
 
 const codeSlice = createSlice({
@@ -35,10 +39,14 @@ const codeSlice = createSlice({
 
         setError : (state, action) => {
             state.error = action.payload
+        },
+        
+        setDescription : (state, action) => {
+            state.description = action.payload
         }
     }
 })
 
 
-export const {setCodeDetails, setSuccess, setContent, setLanguage, setRunning, setError, setOutput} = codeSlice.actions
+export const {setCodeDetails, setSuccess, setContent, setLanguage, setRunning, setError, setOutput, setDescription} = codeSlice.actions
 export default codeSlice.reducer

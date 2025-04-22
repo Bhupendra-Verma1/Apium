@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface CodeRepository extends JpaRepository<Code, String> {
-    List<Code> findByUserId(Long userId);
+    List<Code> findByUserId(String userId);
 }
