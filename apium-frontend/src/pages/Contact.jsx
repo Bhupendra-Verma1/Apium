@@ -29,9 +29,9 @@ const Contact = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    const SERVICE_ID = "service_cf5nsse";
-    const TEMPLATE_ID = "template_fb2q9bu";
-    const PUBLIC_KEY = "DHXQsFr8AAUzGIJyl";
+    const SERVICE_ID = "";
+    const TEMPLATE_ID = "";
+    const PUBLIC_KEY = "";
     if (!formData.name || !formData.email || !formData.message) {
       alert("Please fill all required fields!");
       setIsSubmitting(false);
